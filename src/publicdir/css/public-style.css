@@ -1,0 +1,221 @@
+body,
+span,
+select,
+option,
+input {
+    margin: 0;
+    font-family: 'Recursive', sans-serif;
+    font-family: 'Comfortaa', cursive;
+    transition: all ease-in-out .2s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="range"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="week"]:focus,
+input[type="time"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="color"]:focus,
+#submit-btn:focus,
+select:focus,
+textarea:focus {
+    outline: 0;
+    border-color: #333;
+}
+
+#add-lawyer-page {
+    background: #ececec;
+    padding-top: 50px;
+    min-height: calc(100vh - 50px);
+}
+
+.cstrxk-form-heading {
+    width: 95%;
+    max-width: 960px;
+    margin: 0 auto;
+    font-weight: 300;
+    font-size: 3em;
+}
+
+fieldset {
+    border: 0;
+    width: 95%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.flexed-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.flexed-wrapper > .cstrck-input-wrapper {
+    width: 48%;
+}
+
+
+
+p {
+    font-weight: 400;
+    font-size: 18px;
+}
+
+.cstrck-input-wrapper {
+    position: relative;
+    width: 100%;
+    margin: 30px 0;
+}
+
+.cstrck-input-wrapper input {
+    width: 100%;
+    background: #e6e6e6;
+    border: 0;
+    border: 1px solid #cacaca;
+    padding: 15px;
+    border-radius: 0;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.casetracker-select-input {
+    width: 100%;
+    background: #e6e6e6;
+    border-radius: 0;
+    border: 1px solid #cacaca;
+    padding: 15px;
+    font-weight: 300;
+    color: #585858;
+    font-size: 18px;
+}
+
+.casetracker-select-input option {
+    font-weight: 300;
+    color: #585858;
+    font-size: 18px;
+}
+
+input,
+label {
+    transition: all .1s ease-in-out;
+}
+
+#submit-btn {
+    background: #14ff04;
+    color: #fff;
+    font-weight: 800;
+    font-family: inherit;
+    max-width: 450px;
+    font-size: 24px;
+    text-transform: none;
+}
+
+
+.cstrck-input-wrapper label {
+    position: absolute;
+    top: 17px;
+    left: 15px;
+    color: #585858;
+    cursor: text;
+    font-weight: 300;
+}
+
+.error-string {
+    display: block;
+    position: absolute;
+    font-size: 11px;
+    color: red;
+    font-weight: 600;
+    top: -17px;
+    line-height: 0.95;
+}
+
+.errored {
+    color: red;
+    border-color: red !important;
+}
+
+.error-heading {
+    width: 95%;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px 0;
+    background: #fff;
+    border: 1px solid red;
+    color: red;
+    font-size: 1.2em;
+    font-weight: 800;
+}
+
+.lawyer-added, .added-info {
+    width: 95%;
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 2.5em;
+    background: #fff;
+    padding: 20px 30px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #43ff43;
+    line-height: 1.2;
+}
+
+.added-info {
+    background: transparent;
+    border-color: #bfbfbf;
+    margin-top: 10px;
+    padding: 0;
+    border-bottom: 0;
+}
+
+.lawyer-info-wrapper {
+    font-weight: 400;
+    font-size: 18px;
+    margin: 0;
+    padding: 10px 0;
+    border-bottom: 1px solid #bfbfbf;
+    font-weight: 700;
+    font-size: 1.6rem;
+}
+
+@media only screen and (max-width: 840px) {
+    .cstrxk-form-heading {
+        font-size: 2em;
+    }
+
+    .flexed-wrapper {
+        display: block;
+    }
+
+    .flexed-wrapper > .cstrck-input-wrapper {
+        width: 100%;
+        margin-bottom: 60px;
+    }
+
+    #submit-btn {
+        font-size: 1em;
+        max-width: 360px;
+    }
+}
+
+@media only screen and (max-width: 560px) {
+    .cstrxk-form-heading {
+        font-size: 1.2em;
+        text-align: center;
+        font-weight: 900;
+    }
+
+    .error-heading {
+        font-size: 1.8rem;
+        padding: 20px;
+    }
+}
