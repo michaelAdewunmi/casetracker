@@ -1,0 +1,1 @@
+C:37:"PHPUnit\Runner\DefaultTestResultCache":286:{a:2:{s:7:"defects";a:0:{}s:5:"times";a:3:{s:63:"DevignersPlace\CaseTracker\Tests\Unit\RegisterLawyerTest::testLawyerRoleAbsent";d:0.62;s:64:"DevignersPlace\CaseTracker\Tests\Unit\RegisterLawyerTest::testLawyerRolePresent";d:0.006;s:68:"DevignersPlace\CaseTracker\Tests\Unit\RegisterLawyerTest::testFormInputValsAssigned";d:0.004;}}}
