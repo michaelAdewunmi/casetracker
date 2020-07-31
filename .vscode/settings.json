@@ -1,8 +1,0 @@
-{
-    "workbench.colorCustomizations": {
-        "titleBar.activeBackground": "#1eb400",
-        "titleBar.inactiveBackground": "#1eb400",
-    },
-    "files.eol": "\n",
-    "phpcs.standard": "PSR2"
-}
