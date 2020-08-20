@@ -2,8 +2,6 @@
 
 namespace DevignersPlace\CaseTracker\Includes;
 
-use WP_Roles;
-
 /**
  * The Class to take care of registering Lawyer on the server
  *
@@ -228,15 +226,19 @@ class RegisterLawyer
         if (username_exists(self::$username)) {
             $error_handler->add('username_unavailable', __('This Username is already Taken'));
         }
+
         if (!validate_username(self::$username)) {
             $error_handler->add('username_invalid', __('Invalid Username!'));
         }
+
         if (!is_email(self::$email)) {
             $error_handler->add('email_invalid', __('Please Input a valid Email'));
         }
+
         if (email_exists(self::$email)) {
             $error_handler->add('email_used', __('Email already Registered'));
         }
+
         if (self::$password !== self::$confirm_password) {
             $error_handler->add('passwords_mismatch', __('Passwords do not match'));
         }
@@ -309,20 +311,27 @@ class RegisterLawyer
     }
 
     /**
-     * Fired during the register_user hook. For saving extra Lawyer data as User Meta.
+     * Fired during the user_register hook. For saving extra Lawyer data as User Meta.
      *
+     * @param $user_id ID of the created user which is fed in during the do_action for the user_register hook
      * @since  1.0.0
      * @access public
      * @return void
      */
     public function saveLawyerExtraDataAsMeta($user_id)
     {
-        $post_values = PostGlobalVariableGetter::$post_variable;
+        $post_values = PostGlobalVariableGetter::getPostSuperGlobal();
+
         $gender = $post_values['lawyer-gender'] ?? "";
         $phone = $post_values['lawyer-phone'] ?? "";
-        if (!empty($phone) && !empty($gender)) {
+        $first_name = $post_values['lawyer-first-name'] ?? "";
+        $last_name = $post_values['lawyer-last-name'] ?? "";
+
+        if (!empty($phone) && !empty($gender) && !empty($first_name) && !empty($last_name)) {
             update_user_meta($user_id, 'phone_number', $phone);
             update_user_meta($user_id, 'gender', $gender);
+            update_user_meta($user_id, 'first_name', $first_name);
+            update_user_meta($user_id, 'last_name', $last_name);
         }
     }
 
@@ -340,22 +349,43 @@ class RegisterLawyer
             wp_new_user_notification($created_user_id);
             wp_mail(
                 self::$email,
-                'You Have been registered as a Lawyer.',
+                "You Have been registered as a Lawyer.",
                 "You have been registered as a Lawyer. \n Your login details is as shown below \n\n".
                 "Username: ".self::$username."\nPassword: ".self::$password."\n\n"
             );
             $this->resetAllData();
-            $user_succesful_query = array(
-                "done" => 1,
-                "u" => $this->created_user_id,
-                "pass" => wp_create_nonce('allow-user-view')
-            );
-            $redirect_to = add_query_arg($user_succesful_query, $_SERVER["REQUEST_URI"]);
-            wp_redirect($redirect_to);
-            exit;
+            $this->redirectToSuccessPage($created_user_id);
         }
     }
 
+    /**
+     * Redirects to the success Page after user creation and notification  via email
+     *
+     * @param $user_id ID of the created user which is fed in during the do_action for
+     *          the user_register hook
+     * @since  1.0.0
+     * @access public
+     * @return void
+     */
+    public function redirectToSuccessPage($created_user_id)
+    {
+        $user_succesful_query = array(
+            "done" => 1,
+            "u" => $created_user_id,
+            "pass" => wp_create_nonce('allow-user-view'),
+        );
+        $redirect_to = add_query_arg($user_succesful_query, $_SERVER["REQUEST_URI"]);
+        wp_redirect($redirect_to);
+        exit;
+    }
+
+    /**
+     * Resets POST data
+     *
+     * @since  1.0.0
+     * @access public
+     * @return void
+     */
     public function resetAllData()
     {
         unset($_POST);

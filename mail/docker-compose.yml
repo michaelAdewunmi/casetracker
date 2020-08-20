@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  mail:
+    container_name: mail-postfix
+    image: tozd/postfix:alpine-38
+    restart: always
+    hostname: localhost
+    domainname: casetracker.local
+    expose:
+      - "25/tcp"
+      - "465/tcp"
+      - "587/tcp"
+    environment:
+      MAILNAME: casetracker.local # replace with your own server name instead of example.com
+      MY_NETWORKS: 172.17.0.0/16 127.0.0.0/8 192.168.0.0/16 # my mail server happened to be in the 192.168.0.0/16 so I had to add this network
+      MY_DESTINATION: localhost.localdomain, localhost
+      ROOT_ALIAS: d.devignersplace@gmail.com # replace with your e-mail address
+    volumes:
+      - ./volumes/spool:/var/spool/postfix
+      - ./volumes/log:/var/log/postfix
+    networks:
+      mail:
+networks:
+  mail:
+    name: mail # or it will be created as mail_mail

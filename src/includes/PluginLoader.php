@@ -58,18 +58,15 @@ class PluginLoader
      */
     public function __construct()
     {
-        if (defined('PLUGIN_VERSION')) {
-            $this->version = PLUGIN_VERSION;
-        } else {
-            $this->version = '1.0.0';
+        if (!defined('JOSBIZ_PLUGIN_VERSION')) {
+            define('JOSBIZ_PLUGIN_VERSION', '1.0.0');
+        }
+        if (!defined('JOSBIZ_PLUGIN_NAME')) {
+            define('JOSBIZ_PLUGIN_NAME', 'case-tracker');
         }
 
-        if (defined('PLUGIN_PUBLIC_NAME')) {
-            $this->plugin_name = PLUGIN_PUBLIC_NAME;
-        } else {
-            define('PLUGIN_PUBLIC_NAME', 'case-tracker');
-            $this->plugin_name = PLUGIN_PUBLIC_NAME;
-        }
+        $this->plugin_name = JOSBIZ_PLUGIN_NAME;
+        $this->version = JOSBIZ_PLUGIN_VERSION;
         $this->loadDependencies();
         $this->setLocale();
         $this->defineAdminHooks();
@@ -114,9 +111,14 @@ class PluginLoader
     private function defineAdminHooks()
     {
         $plugin_admin = new AdminTasks($this->getPluginName(), $this->getVersion());
-
+        $page_or_post_creator = new PageOrPostCreator($this->getPluginName(), $this->getVersion());
+        $tasks_performer = new TasksPerformer;
         $this->loader->addAction('admin_enqueue_scripts', $plugin_admin, 'enqueueStyles');
         $this->loader->addAction('admin_enqueue_scripts', $plugin_admin, 'enqueueScripts');
+        $this->loader->addAction('admin_init', $page_or_post_creator, 'createCasetrackerPostsOrPages');
+        $this->loader->addAction('admin_init', $tasks_performer, 'enqueueFontawesome');
+        $this->loader->addAction('admin_head', $tasks_performer, 'courtCaseCPTCustomCss');
+        $this->loader->addAction('wp_head', $tasks_performer, 'courtCaseCPTCustomCss');
     }
 
     /**
@@ -129,20 +131,20 @@ class PluginLoader
     private function definePublicHooks()
     {
         $plugin_public = new PublicTasks($this->getPluginName(), $this->getVersion());
+        $reg_cust_post_type = new CustomPostTypesHandler($this->getPluginName(), $this->getVersion());
         $page_templater = new PageAndPostTemplater($this->getPluginName(), $this->getVersion());
-        $page_or_post_creator = new PageOrPostCreator($this->getPluginName(), $this->getVersion());
-        $register_lawyer_handler = new RegisterLawyer(
-            new PostGlobalVariableGetter,
-            wp_roles(),
-            new \WP_Error
-        );
+        $register_lawyer_handler = new RegisterLawyer(new PostGlobalVariableGetter, wp_roles(), new \WP_Error);
 
-        $this->loader->addAction('wp_enqueue_scripts', $plugin_public, 'enqueueStyles');
-        $this->loader->addAction('wp_enqueue_scripts', $plugin_public, 'enqueueScripts');
+        $this->loader->addAction('wp_enqueue_scripts', $plugin_public, 'enqueueStyles', 99999999);
+        $this->loader->addAction('wp_enqueue_scripts', $plugin_public, 'enqueueScripts', 99999999);
         $this->loader->addAction('plugins_loaded', $page_templater, 'loadAllSettingsAndFilters');
-        $this->loader->addAction('admin_init', $page_or_post_creator, 'createCasetrackerPostsOrPages');
+        $this->loader->addAction('init', $reg_cust_post_type, 'registerCustomPostTypes');
         $this->loader->addAction('init', $register_lawyer_handler, 'addNewLawyer');
-        $this->loader->addAction('user_register', $register_lawyer_handler, 'saveLawyerExtraDataAsMeta');
+        $this->loader->addAction('user_register', $register_lawyer_handler, 'saveLawyerExtraDataAsMeta', 99999999);
+
+        /** Load Filters */
+        $this->loader->addFilter('wp_resource_hints', $plugin_public, 'caseTrackerResourceHint', 10, 2);
+
     }
 
     /**

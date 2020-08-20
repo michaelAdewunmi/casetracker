@@ -2,11 +2,11 @@
 
 # Install WordPress.
 wp core install \
-  --title="Learn TDD" \
-  --admin_user="Sleek_Devigner" \
-  --admin_password="adewunmi65" \
-  --admin_email="d.devignersplace@gmail.com" \
-  --url="http://tddlearn.local" \
+  --title="Case Tracker" \
+  --admin_user="MeekAndGentl" \
+  --admin_password="thisismyspace" \
+  --admin_email="casetrackernaija@gmail.com" \
+  --url="http://casetracker.local" \
   --skip-email
 
 # Update permalink structure.

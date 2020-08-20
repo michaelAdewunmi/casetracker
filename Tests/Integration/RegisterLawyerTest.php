@@ -35,6 +35,13 @@ class RegisterLawyerTest extends IntegrationTestCase
     protected $is_role_present;
 
     /**
+     * A controller to differentiate the mock post value that will be used
+     *
+     * @var bool
+     */
+    protected $is_lawyer_reg_test = true;
+
+    /**
      * A Mock of the WP_Roles class needed for the test
      */
     protected $wp_roles_mock;
@@ -50,6 +57,12 @@ class RegisterLawyerTest extends IntegrationTestCase
     protected $super_global_post_mock;
 
     /**
+     * To be used Internally to control the POST super global mock for when it ia
+     * needed to be an empty array and when it is required to have values.
+     */
+    protected $post_is_unset;
+
+    /**
      * An Instance of the class to be tested
      */
     public static $registration_instance;
@@ -61,7 +74,7 @@ class RegisterLawyerTest extends IntegrationTestCase
     {
         parent::setUp();
         add_action('user_register', [$this, 'saveLawyerExtraDataAsMeta']);
-        $this->mockPOSTSuperGlobal();
+        $this->mockPOSTSuperGlobal(true);
         self::$registration_instance = new RegisterLawyer(
             $this->super_global_post_mock,
             new \WP_Roles,
@@ -102,7 +115,11 @@ class RegisterLawyerTest extends IntegrationTestCase
     public function testValidateFormValuesPass()
     {
         $this->allow_empty = false;
-        $reg_instance = self::$registration_instance;
+        $reg_instance = new RegisterLawyer(
+            $this->mockPOSTSuperGlobal(false),
+            new \WP_Roles,
+            new \WP_Error
+        );
         $reg_instance->validateFormValues();
         $wp_errors_handler = ErrorHandler::getErrorsObject();
         $this->assertSame(array(), $wp_errors_handler->get_error_messages());
@@ -115,14 +132,16 @@ class RegisterLawyerTest extends IntegrationTestCase
      */
     public function testValidateFormValuesNoPass()
     {
-        $this->allow_empty = true;
-        $this->mockPOSTSuperGlobal();
+        //$this->allow_empty = true;
+        $this->mockPOSTSuperGlobal(true);
         $reg_instance = new RegisterLawyer(
             $this->super_global_post_mock,
             new \WP_Roles,
             new \WP_Error
         );
+        // var_dump((($this->super_global_post_mock)::getPostSuperGlobal()));
         $reg_instance->validateFormValues();
+
         $wp_errors_handler = ErrorHandler::getErrorsObject();
         $errors = $wp_errors_handler->get_error_messages();
 
@@ -146,7 +165,11 @@ class RegisterLawyerTest extends IntegrationTestCase
             'DevignersPlace\CaseTracker\Includes\RegisterLawyer',
             [$this->super_global_post_mock, $this->wp_roles_mock, new \WP_Error]
         )->makePartial();
-        $register_lawyer->shouldReceive(['isRegisterPage' => true, 'allowLawyerRegistration' => true]);
+        $register_lawyer->shouldReceive([
+            'isRegisterPage' => true,
+            'allowLawyerRegistration' => true,
+            'redirectToSuccessPage' => true
+        ]);
 
         $register_lawyer->addNewLawyer();
 
@@ -208,33 +231,33 @@ class RegisterLawyerTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function mockPOSTSuperGlobal()
-    {
-         // Set up the Content Getter mock.
-        $global_post_var_mock = Mockery::mock(PostGlobalVariableGetter::class);
-        $global_post_var_mock
-                ->shouldReceive('getPostSuperGlobal')
-                ->andReturnUsing([$this, 'getMockPostGlobal']);
-        $this->super_global_post_mock = $global_post_var_mock;
-    }
+    // public function mockPOSTSuperGlobal()
+    // {
+    //      // Set up the Content Getter mock.
+    //     $global_post_var_mock = Mockery::mock(PostGlobalVariableGetter::class);
+    //     $global_post_var_mock
+    //             ->shouldReceive('getPostSuperGlobal')
+    //             ->andReturnUsing([$this, 'getMockPostGlobal']);
+    //     $this->super_global_post_mock = $global_post_var_mock;
+    // }
 
-    /**
-     * A Substitute for the POST super global
-     *
-     * @return void
-     */
-    public function getMockPostGlobal()
-    {
-        return array(
-            'lawyer-username'           => $this->allow_empty ? '' : 'Sleek_Lawyer',
-            'lawyer-email'              => $this->allow_empty ? '' : 'michaelme@gmail.com',
-            'lawyer-first-name'         => $this->allow_empty ? '' : 'Demilade',
-            'lawyer-last-name'          => $this->allow_empty ? '' : 'Young',
-            'lawyer-gender'             => $this->allow_empty ? '' : 'Female',
-            'lawyer-phone'              => $this->allow_empty ? '' : '08123456789',
-            'lawyer-password'           => $this->allow_empty ? '' : 'hereismypasswordforyou',
-            'lawyer-password-confirm'   => $this->allow_empty ? '' : 'hereismypasswordforyou',
-            'lawyer-registration-nonce' => $this->allow_empty ? '' : 'LawyerRegistrationNonce'
-        );
-    }
+    // /**
+    //  * A Substitute for the POST super global
+    //  *
+    //  * @return void
+    //  */
+    // public function getMockPostGlobal()
+    // {
+    //     return array(
+    //         'lawyer-username'           => $this->allow_empty ? '' : 'Sleek_Lawyer',
+    //         'lawyer-email'              => $this->allow_empty ? '' : 'michaelme@gmail.com',
+    //         'lawyer-first-name'         => $this->allow_empty ? '' : 'Demilade',
+    //         'lawyer-last-name'          => $this->allow_empty ? '' : 'Young',
+    //         'lawyer-gender'             => $this->allow_empty ? '' : 'Female',
+    //         'lawyer-phone'              => $this->allow_empty ? '' : '08123456789',
+    //         'lawyer-password'           => $this->allow_empty ? '' : 'hereismypasswordforyou',
+    //         'lawyer-password-confirm'   => $this->allow_empty ? '' : 'hereismypasswordforyou',
+    //         'lawyer-registration-nonce' => $this->allow_empty ? '' : 'LawyerRegistrationNonce'
+    //     );
+    // }
 }

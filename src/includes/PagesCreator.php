@@ -59,5 +59,33 @@ class PageOrPostCreator
                 update_post_meta($new_page_id, '_wp_page_template', $new_page_template);
             }
         endif;
+        $this->createCaseAdditionPage();
+    }
+
+    /**
+     * Create the page for the case addition as cpt
+     *
+     * @return void
+     */
+    public function createCaseAdditionPage()
+    {
+        $page = get_page_by_path('add-court-case');
+        $new_page_template = '../publicdir/templates/add-case.php';
+
+        if (!isset($page)) :
+            $new_page_id = wp_insert_post(
+                array (
+                    'post_type'     => 'page',
+                    'post_title'    => 'Add a New Case',
+                    'post_content'  => '',
+                    'post_status'   => 'publish',
+                    'guid'          => 'add-court-case',
+                    'post_name'     => 'add-court-case'
+                )
+            );
+            if (!empty($new_page_template)) {
+                update_post_meta($new_page_id, '_wp_page_template', $new_page_template);
+            }
+        endif;
     }
 }

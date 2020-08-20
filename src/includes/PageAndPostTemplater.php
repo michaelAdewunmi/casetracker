@@ -94,6 +94,7 @@ class PageAndPostTemplater
             // is presently in the includes folder, so we move backwards to lead us to the public, then templates folder
             // and then grab all required templates.
             '../publicdir/templates/registration-form.php' => 'Lawyer Registration Form Template',
+            '../publicdir/templates/add-case.php' => 'Court Case Addition Form',
         );
     }
 

@@ -2,11 +2,15 @@ body,
 span,
 select,
 option,
-input {
-    margin: 0;
-    font-family: 'Recursive', sans-serif;
-    font-family: 'Comfortaa', cursive;
+input,
+ul {
+    margin: 0 !important;
+    font-family: 'Comfortaa', sans-serif !important;
     transition: all ease-in-out .2s;
+}
+
+#tags-list {
+    margin-bottom: 5px !important;
 }
 
 input[type="text"]:focus,
@@ -30,31 +34,35 @@ textarea:focus {
     border-color: #333;
 }
 
-#add-lawyer-page {
+#add-lawyer-page,
+#case-adder {
     background: #ececec;
     padding-top: 50px;
     min-height: calc(100vh - 50px);
 }
 
-.cstrxk-form-heading {
+.section-body-wrapper-boxed {
     width: 95%;
     max-width: 960px;
     margin: 0 auto;
+}
+
+.cstrck-form-heading {
+    margin: 0 auto;
     font-weight: 300;
     font-size: 3em;
+    font-family: inherit;
 }
 
 fieldset {
     border: 0;
-    width: 95%;
-    max-width: 960px;
-    margin: 0 auto;
     padding: 20px 0;
 }
 
 .flexed-wrapper {
     display: flex;
     justify-content: space-between;
+    font-family: inherit;
 }
 
 .flexed-wrapper > .cstrck-input-wrapper {
@@ -72,9 +80,11 @@ p {
     position: relative;
     width: 100%;
     margin: 30px 0;
+    font-family: inherit;
 }
 
-.cstrck-input-wrapper input {
+.cstrck-input-wrapper input,
+.tag-wrapper .casetracker-tags-input {
     width: 100%;
     background: #e6e6e6;
     border: 0;
@@ -83,6 +93,7 @@ p {
     border-radius: 0;
     font-size: 20px;
     font-weight: 300;
+    font-family: inherit;
 }
 
 .casetracker-select-input {
@@ -94,6 +105,7 @@ p {
     font-weight: 300;
     color: #585858;
     font-size: 18px;
+    font-family: inherit;
 }
 
 .casetracker-select-input option {
@@ -125,6 +137,7 @@ label {
     color: #585858;
     cursor: text;
     font-weight: 300;
+    font-family: inherit;
 }
 
 .error-string {
@@ -156,11 +169,12 @@ label {
     font-weight: 800;
 }
 
-.lawyer-added, .added-info {
+.record-added,
+.added-info {
     width: 95%;
     max-width: 700px;
     margin: 0 auto;
-    font-size: 2.5em;
+    font-size: 2.2em;
     background: #fff;
     padding: 20px 30px;
     text-align: center;
@@ -187,8 +201,233 @@ label {
     font-size: 1.6rem;
 }
 
+/**=====================================================
+    Notification Modal Styles
+=====================================================**/
+#notification {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -20;
+    background: rgba(0, 0, 0, 0.5);
+    min-width: 100%;
+    min-height: 100vh;
+    opacity: 0;
+    transition: all .3s ease-in-out;
+    justify-content: flex-start;
+    padding-top: 120px;
+}
+
+#notification.show-it {
+    display: flex;
+}
+
+.notifier {
+    width: 98%;
+    min-height: 30vh;
+    background: white;
+    max-width: 500px;
+    align-self: center;
+    border-radius: 2%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    transform: scaleY(0);
+    transition: all .3s ease-in-out;
+    transform-origin: left top 0px;
+    padding: 30px;
+}
+
+.main--btn.close-notify, #injectedbtn {
+    height: auto;
+    max-width: 200px;
+    align-self: center;
+    padding: 15px 30px;
+    background: #0086df;
+    color: #fff;
+    cursor: pointer;
+}
+
+#msg {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 18px;
+}
+
+#msg .success {
+    color: #00db00;
+}
+
+#msg .fail {
+    color: red;
+}
+
+.close-modal {
+    border: 1px solid #347ab3;
+    border-radius: 30px;
+    padding: 0 20px;
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    color: #347ab3;
+    cursor: default;
+}
+
+
+#notification-btn  {
+    max-width: 280px;
+    margin: 0 auto;
+    padding: 15px 30px;
+    background: #00BCD4;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+/**==========================================
+    Css Styles for Loader
+==========================================**/
+.lds-ring {
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 80px;
+}
+
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 52px;
+    height: 52px;
+    margin: 8px;
+    border: 4px solid #919191;
+    border-radius: 50%;
+    -webkit-animation: lds-ring 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    animation: lds-ring 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #919191 transparent transparent transparent;
+}
+
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+
+.lds-ring.for-approval-detail{
+    position: absolute;
+    top: calc(50% - 50px) !important;
+    left: calc(50% - 30px);
+}
+
+.lds-ring.for-approval-detail.for-search {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    left: 10px;
+}
+
+.lds-ring.for-approval-detail.for-search div {
+    width: 30px;
+    height: 30px;
+}
+
+/**
+====================================================
+Styles for the Tags for the case adder page
+====================================================
+*/
+#present-tags {
+    display: flex;
+    max-width: 500px;
+    flex-wrap: wrap;
+}
+
+.checkbox-wrapper {
+    margin-right: 10px;
+    width: 100px;
+    font-size: 12px !important;
+}
+
+.tag-wrapper {
+    margin-top: 30px;
+}
+
+#tag-input {
+    margin-top: 5px !important;
+    min-width: 300px;
+}
+
+#tags-list {
+    margin: 0;
+    width: 100%;
+}
+
+input[type="checkbox" i]:focus {
+    outline: 0 !important;
+}
+
+.separator {
+    margin: 0 10px !important;
+}
+
+.fa.fa-times.del-comm {
+    background: green;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    padding: 0;
+    color: #fff;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    position: relative;
+    top: -2px;
+    font-size: 12px;
+}
+
+.fa.fa-times.del-comm:hover {
+    background: red;
+}
+
+.tagList {
+    background: #fff;
+    padding: 5px;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.tagline {
+    font-size: 20px;
+    text-align: center;
+    margin-top: 20px;
+    width: 90%;
+    margin: 20px auto;
+}
+
+
+
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    } 100% {
+        transform: rotate(360deg);
+    }
+}
+
 @media only screen and (max-width: 840px) {
-    .cstrxk-form-heading {
+    .cstrck-form-heading {
         font-size: 2em;
     }
 
@@ -208,7 +447,7 @@ label {
 }
 
 @media only screen and (max-width: 560px) {
-    .cstrxk-form-heading {
+    .cstrck-form-heading {
         font-size: 1.2em;
         text-align: center;
         font-weight: 900;
@@ -217,5 +456,35 @@ label {
     .error-heading {
         font-size: 1.8rem;
         padding: 20px;
+    }
+
+    .record-added, .added-info {
+        font-size: 1em;
+    }
+
+    .tagList {
+        line-height: 2;
+    }
+}
+
+@media screen and (min-width: 560px) {
+    .notifier {
+        width: 70%;
+    }
+}
+
+@media screen and (min-width: 767px) {
+    .notifier.dlarge{
+        width: 70%;
+        height: 70%;
+    }
+    .lds-ring.dlarge {
+        width: 200px;
+        height: 200px;
+        margin-bottom: 20px;
+    }
+    .lds-ring.dlarge div {
+        width: 200px;
+        height: 200px;
     }
 }

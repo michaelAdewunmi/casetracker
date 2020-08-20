@@ -41,13 +41,19 @@ if (!defined('WPINC')) {
  * Starting at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('PLUGIN_VERSION', '1.0.0');
+define('JOSBIZ_PLUGIN_VERSION', '1.0.0');
 
 /**
  * Current plugin name.
  * Rename this for your plugin and update it if you change name.
  */
-define('PLUGIN_PUBLIC_NAME', 'case-tracker');
+define('JOSBIZ_PLUGIN_NAME', 'case-tracker');
+
+define('JOSBIZ_PLUGIN_MAIN_DIR', plugin_dir_url(__FILE__) . 'src/');
+
+define('JOSBIZ_PLUGIN_PUBLIC_DIR', JOSBIZ_PLUGIN_MAIN_DIR . 'publicdir/');
+
+define('JOSBIZ_PLUGIN_TEXT_DOMAIN', 'josbiz-case-tracker');
 
 
 /**

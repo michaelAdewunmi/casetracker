@@ -15,6 +15,7 @@ services:
     networks:
       - 'front'
       - 'back'
+      - 'mail'
     volumes:
       - 'C:\Users\micha\Desktop\Projects\mydockerfiles\casetracker:/var/www/html:rw'
       - '.:/var/www/html/wp-content/plugins/case-tracker:ro'
@@ -49,15 +50,11 @@ services:
           - '${DOCKER_DEV_DOMAIN:-casetracker.local}'
     volumes:
       - '/var/run/docker.sock:/tmp/docker.sock:ro'
-  nullmailer:
-    image: vimagick/nullmailer
-    cotainer_name: nullmailer
-    volumes:
-      - ./nullmailer:/etc/nullmailer
-        restart: always
 networks:
   front: {}
   back: {}
-
+  mail:
+    external: true  # which also means this network must exist already before this container is run
+    name: mail  # the name is nnecessary or the container will look for currentdirectoryname_mail
 volumes:
   wp: {}

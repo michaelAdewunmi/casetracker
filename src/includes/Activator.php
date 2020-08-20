@@ -37,6 +37,14 @@ class Activator
 
             add_role('josbiz-casetracker-lawyer', __('Case Tracker Lawyer'), $args);
         }
+        if (!wp_roles()->is_role('mini-administrator')) {
+            $args = array(
+                'read' => true, 'edit_posts' => true, 'edit_pages' => false, 'edit_others_posts' => false,
+                'create_posts' => true, 'publish_posts' => true, 'delete_posts' => true, 'edit_themes' => false,
+                'install_plugins' => false, 'update_plugin' => false, 'update_core' => false
+            );
+            add_role('mini-administrator', __('Case Tracker Mini Administrator'), $args);
+        }
         return;
     }
 }

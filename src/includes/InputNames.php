@@ -56,6 +56,18 @@ class InputNames
     );
 
     /**
+     * An Array of Input Names for the add case page
+     *
+     * @since  1.0.0
+     * @access public
+     * @return array
+     */
+    public static $add_case_input_names = array (
+        'suit-number', 'lawyer-assigned', 'court-name',
+        'court-address', 'case-description', 'case-start-date',
+    );
+
+    /**
      * An Associative Array of Input Names and Errors in the registration form
      *
      * @since  1.0.0

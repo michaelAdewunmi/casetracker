@@ -9,7 +9,7 @@ module.exports = function( grunt ) {
 
 		addtextdomain: {
 			options: {
-				textdomain: 'learn-tdd',
+				textdomain: 'josbiz-case-tracker',
 			},
 			update_all_domains: {
 				options: {
