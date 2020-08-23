@@ -5,7 +5,7 @@
     "license": "MIT",
     "minimum-stability": "dev",
     "require": {
-        "php" : "^7.2"
+        "php" : "^7.4"
     },
     "autoload": {
         "psr-4": {
@@ -43,7 +43,7 @@
         "optimize-autoloader": true,
         "process-timeout": 0,
         "platform": {
-            "php" : "7.2"
+            "php" : "7.4"
         }
     }
 }
