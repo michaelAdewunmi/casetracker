@@ -7,54 +7,15 @@ class Calendar {
         this.attachEvents();
         this.updateMonthDivToPresent();
         this.updateYearDivToPresent();
-        this.loadCalendarUi();
+        this.loadCalendarUI();
     }
 
     attachEvents() {
+        console.log(this);
         $("#next--btn").on('click', this.increaseYear.bind(this));
         $("#prev--btn").on('click', this.reduceYear.bind(this));
         $("#prev--mnth").on('click', this.prevMonth.bind(this));
         $("#next--mnth").on('click', this.nextMonth.bind(this));
-    }
-
-    increaseYear() {
-        const presentYear = $("#ctyear").attr("data-ctyear");
-        const increaseYearByOne = Number(presentYear)+1;
-        $("#ctyear").attr("data-ctyear", increaseYearByOne).html(increaseYearByOne);
-        this.loadCalendarUi();
-    }
-
-    reduceYear() {
-        const presentYear = $("#ctyear").attr("data-ctyear");
-        const reduceYearByOne = Number(presentYear)-1;
-        $("#ctyear").attr("data-ctyear", reduceYearByOne).html(reduceYearByOne);
-        this.loadCalendarUi();
-    }
-
-    prevMonth() {
-        const monthsArr = this.monthAndVal();
-        if($("#ctmonth").attr("data-ctmonth")=="1") {
-            $("#ctmonth").attr("data-ctmonth", 12).html(monthsArr[11]);
-            this.reduceYear();
-        } else {
-            const presentMonth = $("#ctmonth").attr("data-ctmonth");
-            const newMonth = Number(presentMonth)-1
-            $("#ctmonth").attr("data-ctmonth", newMonth).html(monthsArr[newMonth-1]);
-            this.loadCalendarUi();
-        }
-    }
-
-    nextMonth() {
-        const monthsArr = this.monthAndVal();
-        if($("#ctmonth").attr("data-ctmonth")=="12") {
-            $("#ctmonth").attr("data-ctmonth", 1).html(monthsArr[0]);
-            this.increaseYear();
-        } else {
-            const presentMonth = $("#ctmonth").attr("data-ctmonth");
-            const newMonth = Number(presentMonth)+1
-            $("#ctmonth").attr("data-ctmonth", newMonth).html(monthsArr[newMonth-1]);
-            this.loadCalendarUi();
-        }
     }
 
     monthAndVal() {
@@ -78,13 +39,267 @@ class Calendar {
         return true;
     }
 
+    numberOfDaysInMonth(month, year ) {
+        const ThirtyDaysMonth=["4", "6", "9", "11"]
+        if(month==2 && (year%4==0 || (year%100==0 && year%400==0))) {
+            return 29;
+        } else if (month==2 && (year%4!=0 || year%400!=0)) {
+            return 28;
+        } else if (ThirtyDaysMonth.indexOf(String(month))>-1) {
+            return 30;
+        } else {
+            return 31;
+        }
+    }
+
+    addLeadingZeros(num) {
+        return num = num < 10 ? "0"+String(num) : num;
+    }
+
+    renderFullDate(year, month, day) {
+        return `${year}-${this.addLeadingZeros(month)}-${this.addLeadingZeros(day)}`
+    }
+
+    increaseYear() {
+        const presentYear = $("#ct-year").attr("data-ct-year");
+        console.log(presentYear);
+        const increaseYearByOne = Number(presentYear)+1;
+        $("#ct-year").attr("data-ct-year", increaseYearByOne).html(increaseYearByOne);
+        this.loadCalendarUI();
+    }
+
+    reduceYear() {
+        console.log("HERE WE ARE!!!");
+        const presentYear = $("#ct-year").attr("data-ct-year");
+        const reduceYearByOne = Number(presentYear)-1;
+        $("#ct-year").attr("data-ct-year", reduceYearByOne).html(reduceYearByOne);
+        this.loadCalendarUI();
+    }
+
+    prevMonth() {
+        const monthsArr = this.monthAndVal();
+        if($("#ct-month").attr("data-ct-month")=="1") {
+            $("#ct-month").attr("data-ct-month", 12).html(monthsArr[11]);
+            this.reduceYear();
+        } else {
+            const presentMonth = $("#ct-month").attr("data-ct-month");
+            const newMonth = Number(presentMonth)-1
+            $("#ct-month").attr("data-ct-month", newMonth).html(monthsArr[newMonth-1]);
+            this.loadCalendarUI();
+        }
+    }
+
+    nextMonth() {
+        const monthsArr = this.monthAndVal();
+        if($("#ct-month").attr("data-ct-month")=="12") {
+            $("#ct-month").attr("data-ct-month", 1).html(monthsArr[0]);
+            this.increaseYear();
+        } else {
+            const presentMonth = $("#ct-month").attr("data-ct-month");
+            const newMonth = Number(presentMonth)+1
+            $("#ct-month").attr("data-ct-month", newMonth).html(monthsArr[newMonth-1]);
+            this.loadCalendarUI();
+        }
+    }
+
+    updateMonthDivToPresent() {
+        const presentMonth = new Date().getMonth();
+        const monthsArr = this.monthAndVal();
+        $("#ct-month").attr("data-ct-month", presentMonth+1).html(monthsArr[presentMonth])
+    }
+
+    updateYearDivToPresent() {
+        const presentYear = new Date().getFullYear();
+        $("#ct-year").attr("data-ct-year", presentYear).html(presentYear)
+    }
+
+    loadCalendarUI() {
+        const selectedMonth = $("#ct-month").attr("data-ct-month");
+        const selectedYear = $("#ct-year").attr("data-ct-year");
+        const startingdayForSelectedMonth = String(new Date(`${selectedMonth}-01-${selectedYear}`)).slice(0,3);
+
+        this.RenderCalendarDays(startingdayForSelectedMonth, selectedMonth, selectedYear);
+        //this.getCasesInTheMonth();
+    }
+
+    RenderCalendarDays(startingDay, month, year) {
+        $("#jbct--date")
+        $("#jbct--date").html("");
+        this.addCalendarPlaceholderDates(startingDay, month, year);
+        this.appendDaysInTheMonthToCal(month, year, $("#jbct--date"));
+        this.appendDatesIntoCalendarBlankWeekDays(month, year)
+    }
+
+    appendDatesIntoCalendarBlankWeekDays(month, year) {
+        const startingdayForSelectedMonth = String(new Date(`${month}-01-${year}`)).slice(0,3);
+        this.addCalendarPlaceholderDates(startingdayForSelectedMonth, month, year, true);
+        this.addrightBorderToLastDivInDateRow();
+    }
+
+    addrightBorderToLastDivInDateRow() {
+        const dayDivs = $(".day-num");
+        [...dayDivs].forEach((day,i) =>{
+            const j=i+1;
+            if(j%7==0) {
+                $(day).addClass("border-inject");
+            }
+        })
+    }
+
+    appendDaysInTheMonthToCal(month, year, elem) {
+        const NoOfDays = this.numberOfDaysInMonth(month, year);
+        for(let i=0; i<NoOfDays; i++) {
+            const fullDate = this.renderFullDate(year, month, i+1)
+            elem.append(
+                `<div id="day${this.addLeadingZeros(i+1)}${this.addLeadingZeros(month)}${year}"
+                data-fulldate="${fullDate}" class="day-num"><span class="date-jbct">${i+1}</span></div>`
+            );
+        }
+    }
+
+    /**
+     * This methods Prepend or Append disabled Placeholder Dates in the calendar UI i.e
+     * Adds a preceeding disabled dates (as placeholders) for months whose first day isnt Sunday
+     * and Adds suceeding disabled dates (as placeholders) for months  whose last day isn't Sunday.
+     *
+     * You might need to refer to the UI to undertstand what this method does
+     *
+     * @param   {string} day    - The first day of the month in the UI's view. Sun, Mon, Tue, Wed, Thu, Fri or Sat.
+     * @param   {string} month  - The Month to be viewed in the calendar UI.
+     * @param   {string} year   - The Year to be viewed in the calendar UI.
+     * @param   {number} append - Append the dates as placeholder
+     * @returns {void}
+     *
+     */
+    addCalendarPlaceholderDates(startingDay, month, year, append=false) {
+        const casetrackerDate = $("#jbct--date");
+
+        // The variable *theMonth* should hold information about the present month if we want to append placeholder dates.
+        // However, if we are prepending dates, then the variable *theMonth* should hold information about the month prior
+        // to the month in view in the UI (i.e the previous month).
+        const theMonth = !append ? Number(month)-1 : Number(month);
+        const numberOfDaysInMonth = this.numberOfDaysInMonth(theMonth, year)
+
+
+        //No need to prepend any date since sunday comes first. We only need to use the
+        // logic below for days ending with a sunday so we can append placeholder dates
+        // to complete the calendar UI.
+        if (startingDay=="Sun") {
+            if(numberOfDaysInMonth===29) {
+                append ? this.appendValUsingLoop(6, $("#jbct--date")) : ''
+            } else if(numberOfDaysInMonth===28) {
+                return '';
+            } else if(numberOfDaysInMonth===30) {
+                append ? this.appendValUsingLoop(5, $("#jbct--date")) : '';
+            } else {
+                append ? this.appendValUsingLoop(4, $("#jbct--date")) : '';
+            }
+        }
+
+        // There is need to consider both Appending and Prepending.
+        if (startingDay=="Mon") {
+            if (numberOfDaysInMonth===29) {
+                !append ? casetrackerDate.prepend(
+                    `<div class="day-num placeholder"><span class="date-jbct ph-date">29</span></div>`
+                ) : this.appendValUsingLoop(5, casetrackerDate);
+            } else if(numberOfDaysInMonth===28) {
+                !append ? casetrackerDate.prepend(
+                    `<div class="day-num placeholder"><span class="date-jbct ph-date">28</span></div>`
+                ) : this.appendValUsingLoop(6, casetrackerDate);
+            } else if(numberOfDaysInMonth===30) {
+                !append ? casetrackerDate.prepend(
+                    `<div class="day-num placeholder"><span class="date-jbct ph-date">30</span></div>`
+                ) : this.appendValUsingLoop(4, casetrackerDate);
+            } else {
+                !append ? casetrackerDate.prepend(
+                    `<div class="day-num placeholder"><span class="date-jbct ph-date">31</span></div>`
+                ) : this.appendValUsingLoop(3, casetrackerDate);
+            }
+        }
+
+        if(startingDay=="Tue") {
+            if (numberOfDaysInMonth===29) {
+                !append ? this.prependValUsingLoop(2, casetrackerDate, 29) : this.appendValUsingLoop(4, casetrackerDate);
+            } else if(numberOfDaysInMonth===28) {
+                !append ? this.prependValUsingLoop(2, casetrackerDate, 28) : this.appendValUsingLoop(5, casetrackerDate);
+            } else if(numberOfDaysInMonth===30) {
+                !append ? this.prependValUsingLoop(2, casetrackerDate, 30) : this.appendValUsingLoop(3, casetrackerDate);
+            } else {
+                !append ? this.prependValUsingLoop(2, casetrackerDate, 31) : this.appendValUsingLoop(2, casetrackerDate);
+            }
+        }
+
+        if (startingDay=="Wed") {
+            if(numberOfDaysInMonth===29) {
+                !append ? this.prependValUsingLoop(3, casetrackerDate, 29) : this.appendValUsingLoop(3, casetrackerDate);
+            } else if(numberOfDaysInMonth===28) {
+                !append ? this.prependValUsingLoop(3, casetrackerDate, 28) : this.appendValUsingLoop(4, casetrackerDate);
+            } else if(numberOfDaysInMonth===30) {
+                !append ? this.prependValUsingLoop(3, casetrackerDate, 30) : this.appendValUsingLoop(2, casetrackerDate);
+            } else {
+                !append ? this.prependValUsingLoop(3, casetrackerDate, 31) : this.appendValUsingLoop(1, casetrackerDate);
+            }
+        }
+
+        if(startingDay=="Thu") {
+            if (numberOfDaysInMonth===29) {
+                !append ? this.prependValUsingLoop(4, casetrackerDate, 29) : this.appendValUsingLoop(2, casetrackerDate);
+            } else if(numberOfDaysInMonth===28) {
+                !append ? this.prependValUsingLoop(4, casetrackerDate, 28) : this.appendValUsingLoop(1, casetrackerDate);
+            } else if(numberOfDaysInMonth===30) {
+                !append ? this.prependValUsingLoop(4, casetrackerDate, 30) : this.appendValUsingLoop(6, casetrackerDate);
+            } else {
+                !append ? this.prependValUsingLoop(4, casetrackerDate, 31) : '';
+            }
+        }
+
+        if(startingDay=="Fri") {
+            if (numberOfDaysInMonth===29) {
+                !append ? this.prependValUsingLoop(5, casetrackerDate, 29) : this.appendValUsingLoop(1, casetrackerDate);
+            } else if(numberOfDaysInMonth===28) {
+                !append ? this.prependValUsingLoop(5, casetrackerDate, 28) : this.appendValUsingLoop(2, casetrackerDate);
+            } else if(numberOfDaysInMonth===30) {
+                !append ? this.prependValUsingLoop(5, casetrackerDate, 30) : '';
+            } else {
+                !append ? this.prependValUsingLoop(5, casetrackerDate, 31) : this.appendValUsingLoop(1, casetrackerDate);
+            }
+        }
+
+        //No need to append any date after saturday since saturday comes last in the UI.
+        if(startingDay=="Sat") {
+            if (numberOfDaysInMonth===29) {
+                !append ? this.prependValUsingLoop(6, casetrackerDate, 29) : '';
+            } else if(numberOfDaysInMonth===28) {
+                !append ? this.prependValUsingLoop(6, casetrackerDate, 28) : this.appendValUsingLoop(1, casetrackerDate);
+            } else if(numberOfDaysInMonth===30) {
+                !append ? this.prependValUsingLoop(6, casetrackerDate, 30) : this.appendValUsingLoop(6, casetrackerDate);
+            } else {
+                !append ? this.prependValUsingLoop(6, casetrackerDate, 31) :  this.appendValUsingLoop(5, casetrackerDate);
+            }
+        }
+    }
+
+    prependValUsingLoop(loopTimes, elem, startVal) {
+        for(let i=0; i<loopTimes; i++) {
+            elem.prepend(`<div class="day-num placeholder"><span class="date-jbct ph-date">${startVal}</span></div>`);
+            startVal=Number(startVal)-1;
+        }
+    }
+
+    appendValUsingLoop(loopTimes, elem) {
+        for(let i=0; i<loopTimes; i++) {
+            elem.append(`<div class="day-num placeholder"><span class="date-jbct ph-date">${i+1}</span></div>`);
+        }
+    }
+
     getCasesInTheMonth() {
-        const yr = $("#ctyear").attr("data-ctyear");
-        const month = $("#ctmonth").attr("data-ctmonth");
+        const yr = $("#ct-year").attr("data-ct-year");
+        const month = $("#ct-month").attr("data-ct-month");
         const monthDays =  this.numberOfDaysInMonth(String(month), yr);
         const monthObjectForCaseCall = {}
         for (let i=0; i<monthDays; i++) {
-            monthObjectForCaseCall[`day${this.addLeadingZeros(i+1)}${this.addLeadingZeros(month)}${yr}`] = this.renderFullDate(yr, month, i+1)
+            //const dateInfo = `day${this.addLeadingZeros(i+1)}${this.addLeadingZeros(month)}${yr}`
+            monthObjectForCaseCall[`day${this.addLeadingZeros(i+1)}`] = this.renderFullDate(yr, month, i+1)
         }
         this.sendDataForCaseAjaxCall(monthObjectForCaseCall);
     }
@@ -166,174 +381,6 @@ class Calendar {
                 console.log(err);
             }
         })
-    }
-
-    updateMonthDivToPresent() {
-        const presentMonth = new Date().getMonth();
-        const monthsArr = this.monthAndVal();
-        $("#ctmonth").attr("data-ctmonth", presentMonth+1).html(monthsArr[presentMonth])
-    }
-
-    updateYearDivToPresent() {
-        const presentYear = new Date().getFullYear();
-        $("#ctmonth").attr("data-ctyear", presentYear).html(presentYear)
-    }
-
-    loadCalendarUi() {
-        const selectedMonth = $("#ctmonth").attr("data-ctmonth");
-        const selectedYear = $("#ctyear").attr("data-ctyear");
-        const dayOfTheWeek = String(new Date(`${selectedMonth}-01-${selectedYear}`)).slice(0,3);
-
-        this.RenderDaysOfTheMonth(dayOfTheWeek, selectedMonth, selectedYear);
-        this.getCasesInTheMonth();
-    }
-
-    RenderDaysOfTheMonth(startDay, month, year) {
-        $("#jbct--date")
-        $("#jbct--date").html("");
-        this.PrependOrAppendFillerDatesForUnfilledDays(startDay, month, year);
-        this.appendDaysInTheMonthToCal(month, year, $("#jbct--date"));
-        this.appendDatesIntoCalendarBlankWeekDays(month, year)
-    }
-
-    appendDatesIntoCalendarBlankWeekDays(month, year) {
-        const NoOfDays = this.numberOfDaysInMonth(month, year);
-        const monthEndingDay = String(new Date(`${month}-${NoOfDays}-${year}`)).slice(0,3);
-        this.PrependOrAppendFillerDatesForUnfilledDays(monthEndingDay, month, year, true);
-        this.addrightBorderToLastDivInDateRow();
-    }
-
-    addrightBorderToLastDivInDateRow() {
-        const dayDivs = $(".day-num");
-        [...dayDivs].forEach((day,i) =>{
-            const j=i+1;
-            if(j%7==0) {
-                $(day).addClass("border-inject");
-            }
-        })
-    }
-
-    numberOfDaysInMonth(month, year ) {
-        const ThirtyDaysMonth=["4", "6", "9", "11"]
-        if(month==2 && (year%4==0 || (year%100==0 && year%400==0))) {
-            return 29;
-        } else if (month==2 && (year%4!=0 || year%400!=0)) {
-            return 28;
-        } else if (ThirtyDaysMonth.indexOf(month)>-1) {
-            return 30;
-        } else {
-            return 31;
-        }
-    }
-
-    addLeadingZeros(num) {
-        return num = num < 10 ? "0"+String(num) : num;
-    }
-
-    renderFullDate(year, month, day) {
-        return `${year}-${this.addLeadingZeros(month)}-${this.addLeadingZeros(day)}`
-    }
-
-    appendDaysInTheMonthToCal(month, year, elem) {
-        const NoOfDays = this.numberOfDaysInMonth(month, year);
-        for(let i=0; i<NoOfDays; i++) {
-            const fullDate = this.renderFullDate(year, month, i+1)
-            elem.append(
-                `<div id="day${this.addLeadingZeros(i+1)}${this.addLeadingZeros(month)}${year}"
-                    data-fulldate="${fullDate}" class="day-num"><span class="date-jbct">${i+1}</span></div>`);
-        }
-    }
-
-    PrependOrAppendFillerDatesForUnfilledDays(day, month, year, forNextMonth=false) {
-        const ThirtyDaysMonth=[4, 6, 9, 11];
-        const theMonth = !forNextMonth ? Number(month)-1 : Number(month);
-        if(day=="Sun" && theMonth==2 && (year%4==0 || (year%100==0 && year%400==0))) {
-            forNextMonth ? this.appendValUsingLoop(6, $("#jbct--date")) : '';
-        } else if(day=="Sun" && theMonth==2 && (year%4!=0 || year%400!=0)) {
-            forNextMonth ? this.appendValUsingLoop(6, $("#jbct--date")) : '';
-        } else if(day=="Sun" && ThirtyDaysMonth.indexOf(theMonth)>-1) {
-            forNextMonth ? this.appendValUsingLoop(6, $("#jbct--date")) : '';
-        } else if(day=="Sun") {
-            forNextMonth ? this.appendValUsingLoop(6, $("#jbct--date")) : '';
-        }
-
-        if(day=="Mon" && theMonth==2 && (year%4==0 || (year%100==0 && year%400==0))) {
-            !forNextMonth ? $("#jbct--date").prepend(`<div class="day-num placeholder">29</div>`)
-                : this.appendValUsingLoop(5, $("#jbct--date"));
-        } else if(day=="Mon" && theMonth==2 && (year%4!=0 || year%400!=0)) {
-            !forNextMonth ? $("#jbct--date").prepend(`<div class="day-num placeholder">28</div>`)
-                : this.appendValUsingLoop(5, $("#jbct--date"));
-        } else if(day=="Mon" && ThirtyDaysMonth.indexOf(theMonth)>-1) {
-            !forNextMonth ? $("#jbct--date").prepend(`<div class="day-num placeholder">30</div>`)
-                : this.appendValUsingLoop(5, $("#jbct--date"));
-        } else if(day=="Mon") {
-            !forNextMonth ? $("#jbct--date").prepend(`<div class="day-num placeholder">31</div>`)
-                : this.appendValUsingLoop(5, $("#jbct--date"));
-        }
-
-        if(day=="Tue" && theMonth==2 && (year%4==0 || (year%100==0 && year%400==0))) {
-            !forNextMonth ? this.prependValUsingLoop(2, $("#jbct--date"), 29) : this.appendValUsingLoop(4, $("#jbct--date"));
-        } else if(day=="Tue" && theMonth==2 && (year%4!=0 || year%400!=0)) {
-            !forNextMonth ? this.prependValUsingLoop(2, $("#jbct--date"), 28) : this.appendValUsingLoop(4, $("#jbct--date"));
-        } else if(day=="Tue" && ThirtyDaysMonth.indexOf(theMonth)>-1) {
-            !forNextMonth ? this.prependValUsingLoop(2, $("#jbct--date"), 30) : this.appendValUsingLoop(4, $("#jbct--date"));
-        } else if(day=="Tue") {
-            !forNextMonth ? this.prependValUsingLoop(2, $("#jbct--date"), 31) : this.appendValUsingLoop(4, $("#jbct--date"));
-        }
-
-        if(day=="Wed" && theMonth==2 && (year%4==0 || (year%100==0 && year%400==0))) {
-            !forNextMonth ? this.prependValUsingLoop(3, $("#jbct--date"), 29) : this.appendValUsingLoop(3, $("#jbct--date"));
-        } else if(day=="Wed" && theMonth==2 && (year%4!=0 || year%400!=0)) {
-            !forNextMonth ? this.prependValUsingLoop(3, $("#jbct--date"), 28) : this.appendValUsingLoop(3, $("#jbct--date"));
-        } else if(day=="Wed" && ThirtyDaysMonth.indexOf(theMonth)>-1) {
-            !forNextMonth ? this.prependValUsingLoop(3, $("#jbct--date"), 30) : this.appendValUsingLoop(3, $("#jbct--date"));
-        } else if(day=="Wed") {
-            !forNextMonth ? this.prependValUsingLoop(3, $("#jbct--date"), 31) : this.appendValUsingLoop(3, $("#jbct--date"));
-        }
-
-        if(day=="Thu" && theMonth==2 && (year%4==0 || (year%100==0 && year%400==0))) {
-            !forNextMonth ? this.prependValUsingLoop(4, $("#jbct--date"), 29) : this.appendValUsingLoop(2, $("#jbct--date"));
-        } else if(day=="Thu" && theMonth==2 && (year%4!=0 || year%400!=0)) {
-            !forNextMonth ? this.prependValUsingLoop(4, $("#jbct--date"), 28) : this.appendValUsingLoop(2, $("#jbct--date"));
-        } else if(day=="Thu" && ThirtyDaysMonth.indexOf(theMonth)>-1) {
-            !forNextMonth ? this.prependValUsingLoop(4, $("#jbct--date"), 30) : this.appendValUsingLoop(2, $("#jbct--date"));
-        } else if(day=="Thu") {
-            !forNextMonth ? this.prependValUsingLoop(4, $("#jbct--date"), 31) : this.appendValUsingLoop(2, $("#jbct--date"));
-        }
-
-        if(day=="Fri" && theMonth==2 && (year%4==0 || (year%100==0 && year%400==0))) {
-            !forNextMonth ? this.prependValUsingLoop(5, $("#jbct--date"), 29) : this.appendValUsingLoop(1, $("#jbct--date"));
-        } else if(day=="Fri" && theMonth==2 && (year%4!=0 || year%400!=0)) {
-            !forNextMonth ? this.prependValUsingLoop(5, $("#jbct--date"), 28) : this.appendValUsingLoop(1, $("#jbct--date"));
-        } else if(day=="Fri" && ThirtyDaysMonth.indexOf(theMonth)>-1) {
-            !forNextMonth ? this.prependValUsingLoop(5, $("#jbct--date"), 30) : this.appendValUsingLoop(1, $("#jbct--date"));
-        } else if(day=="Fri") {
-            !forNextMonth ? this.prependValUsingLoop(5, $("#jbct--date"), 31) : this.appendValUsingLoop(1, $("#jbct--date"));
-        }
-
-        if(day=="Sat" && theMonth==2 && (year%4==0 || (year%100==0 && year%400==0))) {
-            !forNextMonth ? this.prependValUsingLoop(6, $("#jbct--date"), 29) : '';
-        } else if(day=="Sat" && theMonth==2 && (year%4!=0 || year%400!=0)) {
-            !forNextMonth ? this.prependValUsingLoop(6, $("#jbct--date"), 28) : '';
-        } else if(day=="Sat" && ThirtyDaysMonth.indexOf(theMonth)>-1) {
-            !forNextMonth ? this.prependValUsingLoop(6, $("#jbct--date"), 30) : '';
-        } else if(day=="Sat") {
-            !forNextMonth ? this.prependValUsingLoop(6, $("#jbct--date"), 31) : '';
-        }
-
-    }
-
-    prependValUsingLoop(loopTimes, elem, startVal) {
-        for(let i=0; i<loopTimes; i++) {
-            elem.prepend(`<div class="day-num placeholder"><span class="date-jbct ph-date">${startVal}</span></div>`);
-            startVal=Number(startVal)-1;
-        }
-    }
-
-    appendValUsingLoop(loopTimes, elem) {
-        for(let i=0; i<loopTimes; i++) {
-            elem.append(`<div class="day-num placeholder"><span class="date-jbct ph-date">${i+1}</span></div>`);
-        }
     }
 }
 

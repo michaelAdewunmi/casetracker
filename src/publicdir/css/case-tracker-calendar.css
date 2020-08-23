@@ -1,0 +1,195 @@
+
+#case-cal--wrapper {
+    width: 90%;
+    margin: 0 auto;
+    max-width: 960px;
+    padding-top: 40px;
+}
+
+#jbct--days {
+    display: flex;
+}
+
+#year-header, #month-header {
+    border-top: 1px solid #737373;
+    border-bottom: 1px solid #737373;
+    display: flex;
+}
+
+.btn--change {
+    width: 5%;
+    color: #eee;
+    vertical-align: middle;
+    text-align: center;
+    padding-top: 6px;
+    cursor: pointer;
+}
+
+.btn--change:hover {
+    background: #414141;
+}
+
+.btn--change.month-change {
+    color: #efecec;
+    padding: 0;
+}
+
+.btn--change.month-change:hover {
+    background: #777;
+}
+
+#next--mnth > .fas,
+#prev--mnth > .fas {
+    margin-top: 4px;
+}
+
+#ct-year, #ct-month {
+    margin: 0;
+    width: 90%;
+    text-align: center;
+    padding: 0;
+    color: #eee;
+    font-weight: 300;
+}
+
+#year-header {
+    background: #414141;
+    border-bottom: 0;
+}
+#month-header {
+    padding: 0;
+    background: #414141;
+    color: #fff;
+}
+
+.jbct--day-of-week {
+    width: 14.3%;
+    text-align: center;
+    background: #414141;
+    border-left: 1px solid grey;
+    color: #fff;
+    font-weight: 400;
+    font-size: 18px;
+    padding: 7px;
+}
+
+#jbct--date {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.day-num {
+    width: 14.27%;
+    height: 200px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-right: none;
+    text-align: center;
+    border-top: none;
+    font-weight: 300;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative
+}
+
+.day-num.placeholder {
+    background: #eeeeee;
+    color: #d2d2d2;
+}
+
+.day-num.border-inject {
+    border-right: 1px solid #e0e0e0;
+}
+
+.no-case {
+    font-size: 12px;
+    line-height: 1.2;
+    color: #dddddd;
+    margin-top: 30px;
+    padding: 5px 0;
+    border-bottom: 1px solid #e4e4e4;
+    margin: 10px;
+    border-top: 0;
+    display: block;
+}
+
+.date-jbct {
+    display: block;
+    font-size: 14px;
+    background: #dfdfdf;
+    text-align: left;
+    padding-left: 10px;
+    font-weight: 400;
+    color: #555;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: auto;
+    left: 0;
+}
+
+.date-jbct.ph-date {
+    background: #e7e7e7;
+    color: #cccccc;
+}
+
+.fa {
+    font-weight: lighter !important;
+}
+
+.case_meta.main, .case_meta.preview {
+    display: block;
+    overflow-wrap: break-word;
+    font-size: 12px;
+    line-height: 1.2;
+    padding: 10px 0 10px 0;
+    border-bottom: 1px solid #ccc;
+    color: #888;
+    margin: 0 10px;
+}
+
+.case_meta.preview {
+    text-align: left;
+    border-bottom: 1px solid #efefef;
+    font-size: 14px;
+}
+
+.case-wrapper {
+    position: relative;
+    top:0;
+    left:0;
+}
+
+.pop-over {
+    display: none;
+    position: absolute;
+    background: white;
+    right: 108px;
+    bottom: 0;
+    flex-direction: column;
+    width: 300px;
+    padding: 20px;
+    z-index: 99999999999;
+    box-shadow: 3px 4px 21px rgba(0,0,0,.38);
+    transition: all ease-in .2s;
+    transform: scale(0);
+}
+
+.pop-over.revealjbct {
+    display: flex;
+    transform: scale(1);
+}
+
+.pop-over::after {
+    display: block;
+    content: '';
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 15px solid #ffffff;
+    position: absolute;
+    right: -15px;
+    bottom: 20px;
+}

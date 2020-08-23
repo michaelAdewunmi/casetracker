@@ -95,6 +95,7 @@ class PageAndPostTemplater
             // and then grab all required templates.
             '../publicdir/templates/registration-form.php' => 'Lawyer Registration Form Template',
             '../publicdir/templates/add-case.php' => 'Court Case Addition Form',
+            '../publicdir/templates/case-tracker-calendar-view.php' => 'Case Tracker Calendar View'
         );
     }
 

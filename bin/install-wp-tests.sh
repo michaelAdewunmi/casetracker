@@ -8,9 +8,15 @@ fi
 DB_NAME=$1
 DB_USER=$2
 DB_PASS=$3
-DB_HOST=${3-localhost}
-WP_VERSION=${4-latest}
-SKIP_DB_CREATE=${5-false}
+DB_HOST=${4-localhost}
+WP_VERSION=${5-latest}
+SKIP_DB_CREATE=${6-false}
+
+echo $1
+echo $2
+echo $3
+echo $4
+echo $5
 
 TMPDIR=${TMPDIR-/tmp}
 TMPDIR=$(echo $TMPDIR | sed -e "s/\/$//");
@@ -149,7 +155,7 @@ install_db() {
 	fi
 
 	# create database
-	mysqladmin create $DB_NAME --user="$DB_USER" --password="" $EXTRA
+	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS" $EXTRA
 }
 
 install_wp

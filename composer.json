@@ -27,21 +27,21 @@
         "php-coveralls/php-coveralls": "^2.2"
     },
     "scripts" : {
-        "tests" : "composer fixes && composer sniffs && composer lints && phpunit --coverage-clover coverage/clover.xml",
         "sniffs" : "phpcs --standard=PSR2 src/ && phpcs --standard=PSR2 tests/",
         "fixes" : "php-cs-fixer fix src/ && php-cs-fixer fix tests/",
         "lints" : "parallel-lint ./src  --blame --exclude vendor && parallel-lint ./tests  --blame --exclude vendor",
         "spinup": "docker-compose -f docker-compose.yml up -d",
-        "start_phpunit": "docker-compose -f docker-compose.yml -f docker-compose.phpunit.yml up -d",
-        "add_testsuite": "docker-compose -f docker-compose.phpunit.yml run --rm wordpress_phpunit /app/bin/install-wp-tests.sh wordpress_test root '' mysql_phpunit latest true`",
+        "phpunit": "docker-compose -f docker-compose.yml -f docker-compose.phpunit.yml up -d",
+        "testsuite": "docker-compose -f docker-compose.phpunit.yml run --rm wordpress_phpunit /app/bin/install-wp-tests.sh wordpress_test root '' mysql_phpunit latest true",
         "create_dummy": "docker run -d --rm --name dummy -v case-tracker_testsuite:/var/lib/docker/volumes/case-tracker_testsuite/_data alpine tail -f /dev/null",
-        "change_test_config_in_volume": "docker cp C:/mine/wordpress-tests-lib/wp-tests-config.php dummy:/var/lib/docker/volumes/case-tracker_testsuite/_data/wordpress-tests-lib ",
-        "run_test": "docker-compose -f docker-compose.phpunit.yml run --rm wordpress_phpunit phpunit --configuration phpunit-integration.xml.dist",
+        "adjust_test_config": "docker cp C:/mine/wordpress-tests-lib/wp-tests-config.php dummy:/var/lib/docker/volumes/case-tracker_testsuite/_data/wordpress-tests-lib ",
+        "tests": "docker-compose -f docker-compose.phpunit.yml run --rm wordpress_phpunit phpunit --configuration phpunit-integration.xml.dist",
         "start_docker": "docker start $(docker ps -a -q)",
         "unit-tests": "phpunit --testsuite=unit"
     },
     "config": {
         "optimize-autoloader": true,
+        "process-timeout": 0,
         "platform": {
             "php" : "7.2"
         }

@@ -139,6 +139,13 @@ class PublicTasks
             101,
             'all'
         );
+        wp_enqueue_style(
+            $this->plugin_name.'-public-calendar-view-style',
+            JOSBIZ_PLUGIN_PUBLIC_DIR .'css/case-tracker-calendar.css',
+            array(),
+            101,
+            'all'
+        );
     }
 
     /**
@@ -173,11 +180,23 @@ class PublicTasks
             $this->version,
             true
         );
+        wp_register_script(
+            $this->plugin_name.'-case-tracker-calendar-view',
+            JOSBIZ_PLUGIN_PUBLIC_DIR.'js/case-tracker-calendar.js',
+            array('jquery'),
+            1234,
+            true
+        );
+
         //if (is_page('register-lawyer')) {
             wp_enqueue_script($this->plugin_name.'-registration-script');
         //}
         if (is_page('add-court-case')) {
             wp_enqueue_script($this->plugin_name.'-notifier-script');
+        }
+
+        if (is_page('case-tracker-calendar')) {
+            wp_enqueue_script($this->plugin_name.'-case-tracker-calendar-view');
         }
     }
 }
