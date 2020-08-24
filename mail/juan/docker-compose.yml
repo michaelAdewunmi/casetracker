@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  postfix:
+    image: juanluisbaptiste/postfix:alpine
+    expose:
+    - "25"
+    env_file:
+      - .env
+    restart: always
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      postfix:
+networks:
+  postfix:
+    name: postfix

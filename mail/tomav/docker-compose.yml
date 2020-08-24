@@ -25,7 +25,6 @@ services:
       - DEFAULT_RELAY_HOST=[smtp.gmail.com]:587
       - RELAY_HOST=[smtp.gmail.com]:587
       - POSTFIX_INET_PROTOCOLS=ipv4
-      - ENABLE_SASLAUTHD=1
       - ONE_DIR=1
       - DMS_DEBUG=1
       - SPOOF_PROTECTION=0
