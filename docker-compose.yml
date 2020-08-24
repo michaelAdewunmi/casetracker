@@ -19,9 +19,10 @@ services:
     networks:
       - 'front'
       - 'back'
-      # - 'mail'
+      - 'postfix'
     volumes:
       - '/C/Users/micha/Desktop/Projects/mydockerfiles/casetracker:/var/www/html:rw'
+      - '/C/Users/micha/Desktop/post-smtp:/var/www/html/wp-content/plugins/postman-smtp:rw'
       - '.:/var/www/html/wp-content/plugins/case-tracker:ro'
   wp-cli:
     image: 'wordpress:cli-${WP_CLI_VERSION:-2.4.0}-php${PHP_VERSION:-7.4}'
@@ -36,6 +37,7 @@ services:
     volumes:
       - '/C/Users/micha/Desktop/Projects/mydockerfiles/casetracker:/var/www/html:rw'
       - './bin/install-wp.sh:/usr/local/bin/install-wp:ro'
+      - '/C/Users/micha/Desktop/post-smtp:/var/www/html/wp-content/plugins/postman-smtp:rw'
       - '.:/var/www/html/wp-content/plugins/case-tracker:ro'
   mysql:
     image: 'mariadb'
@@ -53,12 +55,13 @@ services:
         aliases:
           - '${DOCKER_DEV_DOMAIN:-casetracker.local}'
     volumes:
+      - './nginx/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf'
       - '/var/run/docker.sock:/tmp/docker.sock:ro'
 networks:
   front: {}
   back: {}
-  # mail:
-    # external: true  # which also means this network must exist already before this container is run
-    # name: mail  # the name is nnecessary or the container will look for currentdirectoryname_mail
+  postfix:
+    external: true  # which also means this network must exist already before this container is run
+    name: postfix  # the name is nnecessary or the container will look for currentdirectoryname_mail
 volumes:
   wp: {}

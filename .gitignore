@@ -10,3 +10,5 @@ vendor/
 *.tar.gz
 *.zip
 zzzzzholdcomposer-copy.json
+zzzzzzzzzstartupscript.sh
+.env
