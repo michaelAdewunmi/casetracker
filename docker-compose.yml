@@ -63,5 +63,8 @@ networks:
   postfix:
     external: true  # which also means this network must exist already before this container is run
     name: postfix  # the name is nnecessary or the container will look for currentdirectoryname_mail
+  mail:
+    external: true
+    name: mail
 volumes:
   wp: {}
