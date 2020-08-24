@@ -20,6 +20,7 @@ services:
       - 'front'
       - 'back'
       - 'postfix'
+      - 'mail'
     volumes:
       - '/C/Users/micha/Desktop/Projects/mydockerfiles/casetracker:/var/www/html:rw'
       - '/C/Users/micha/Desktop/post-smtp:/var/www/html/wp-content/plugins/postman-smtp:rw'
